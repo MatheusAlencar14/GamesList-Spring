@@ -1,13 +1,15 @@
 package com.dev.gameslist.services;
 
+import com.dev.gameslist.dto.GameDTO;
 import com.dev.gameslist.dto.GameMinDTO;
 import com.dev.gameslist.entities.Game;
 import com.dev.gameslist.repositories.GameRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class GameService {
@@ -15,11 +17,18 @@ public class GameService {
     @Autowired
     private GameRepository gameRepository;
 
+    @Transactional
     public List<GameMinDTO> findAll() {
         List<Game> result = gameRepository.findAll();
         return result
                 .stream()
                 .map(game -> new GameMinDTO(game))
                 .toList();
+    }
+
+    @Transactional
+    public GameDTO findById(Long id) {
+        Game result = gameRepository.findById(id).get();
+        return new GameDTO(result);
     }
 }
